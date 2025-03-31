@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagina di Benvenuto</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background: linear-gradient(135deg, #1e3c72, #6a11cb);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            color: white;
+            flex-direction: column;
+        }
+        .welcome-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .welcome {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            font-size: 24px;
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        .section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            max-width: 400px;
+            margin: 10px;
+        }
+        .section p {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+        .qr-code img {
+            width: 150px;
+            height: 150px;
+        }
+        .antispam {
+            margin-top: 20px;
+        }
+        .antispam input {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .antispam button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #6a11cb;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .antispam button:hover {
+            background-color: #1e3c72;
+        }
+        .operation {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+    </style>
+    <script>
+        function generateOperation() {
+            const num1 = Math.floor(Math.random() * 10) + 1;
+            const num2 = Math.floor(Math.random() * 10) + 1;
+            const operator = ['+', '-', '*'][Math.floor(Math.random() * 3)];
+            let result;
+            switch (operator) {
+                case '+':
+                    result = num1 + num2;
+                    break;
+                case '-':
+                    result = num1 - num2;
+                    break;
+                case '*':
+                    result = num1 * num2;
+                    break;
+            }
+            return { num1, num2, operator, result };
+        }
+
+        function checkAnswer() {
+            const userAnswer = parseInt(document.getElementById('answer').value, 10);
+            const correctAnswer = parseInt(document.getElementById('correct-answer').value, 10);
+            if (userAnswer === correctAnswer) {
+                alert("Risposta corretta! Grazie per aver completato l'antispam.");
+            } else {
+                alert("Risposta errata. Riprova!");
+            }
+        }
+
+        function updateQRCode(operation) {
+            const qrCodeImg = document.getElementById('qr-code-img');
+            const operationText = `${operation.num1} ${operation.operator} ${operation.num2} = ${operation.result}`;
+            qrCodeImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(operationText)}`;
+        }
+
+        window.onload = function () {
+            const operation = generateOperation();
+            document.getElementById('operation').textContent = `Quanto fa ${operation.num1} ${operation.operator} ${operation.num2}?`;
+            document.getElementById('correct-answer').value = operation.result;
+            updateQRCode(operation);
+        };
+    </script>
+</head>
+<body>
+    <div class="welcome-container">
+        <div class="welcome">Benvenuto</div>
+        <div class="subtitle">Siamo felici di averti qui con noi!</div>
+    </div>
+    <div class="section qr-code">
+        <p>Scansiona il codice QR qui sotto per visualizzare la risoluzione:</p>
+        <img id="qr-code-img" src="" alt="QR Code">
+    </div>
+    <div class="section antispam">
+        <p>Per favore, risolvi questa semplice operazione per continuare:</p>
+        <div class="operation" id="operation"></div>
+        <input type="text" id="answer" placeholder="Inserisci la risposta" required>
+        <input type="hidden" id="correct-answer">
+        <button onclick="checkAnswer()">Invia</button>
+    </div>
+</body>
+</html>
+::
